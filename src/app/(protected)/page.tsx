@@ -1,7 +1,10 @@
+import Image from "next/image";
+
+import { BrandLockup } from "@/components/BrandLockup";
 import { CompareTable } from "@/components/CompareTable";
 import { HeroTelemetry } from "@/components/HeroTelemetry";
 import { JobSection } from "@/components/JobSection";
-import { QuoteWall } from "@/components/QuoteWall";
+import { RosterChart } from "@/components/RosterChart";
 import { SiteNav } from "@/components/SiteNav";
 import { JOBS } from "@/data/jobs";
 
@@ -9,26 +12,32 @@ export default function HomePage() {
   return (
     <main id="top">
       <div className="hero-watercolor">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
+        <Image
           className="hero-watercolor-image"
-          src="/brand/watercolor-pad.png"
+          src="/brand/thomson-reuters-watercolor-header.jpg"
           alt=""
+          width={1280}
+          height={720}
+          sizes="100vw"
+          priority
+          unoptimized
         />
         <SiteNav />
       </div>
 
-      <div className="report">
+      <div className="report report-paper">
         <div className="report-hero">
+          <span className="paper-pin paper-pin-left" aria-hidden />
+          <span className="paper-pin paper-pin-right" aria-hidden />
           <HeroTelemetry />
           <section className="hero">
             <div>
-              <p className="eyebrow">A proactive agent for every Datadog rep</p>
-              <h1>The agents that work while your reps sell.</h1>
+              <p className="eyebrow">Grok Bot for Thomson Reuters GTM</p>
+              <h1>A fleet of agents, each with its own computer.</h1>
               <p className="hero-intro">
-                Grok Bot listens to calls, watches the inbox, and researches
-                accounts in the background. Work triggers it — not another
-                prompt.
+                They handle the work around every account. Research, meeting
+                prep, follow-up, and approved answers keep moving while sellers
+                stay with the customer.
               </p>
             </div>
           </section>
@@ -36,11 +45,12 @@ export default function HomePage() {
           <section className="usecase-framing">
             <p className="eyebrow">Three sample use cases</p>
             <h2>
-              Grok Bot gives every seller their own fleet of always-available
-              agent teammates. Anything your sellers do today can be done
-              through Grok Bot.
+              Watch the work move from signal to finished artifact.
             </h2>
-            <p>These are three examples from millions — not the boundary.</p>
+            <p>
+              Every timeline ends with the actual deliverable. Open the agent
+              desk to see chat on the left and its computer on the right.
+            </p>
           </section>
 
           <div className="metric-grid">
@@ -59,6 +69,7 @@ export default function HomePage() {
             ))}
           </div>
         </div>
+        <RosterChart />
 
         <div id="jobs">
           {JOBS.map((job) => (
@@ -67,28 +78,25 @@ export default function HomePage() {
         </div>
       </div>
 
-      <div className="orbit-break" aria-hidden>
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src="/brand/watercolor-orbit.png" alt="" />
-      </div>
-
       <div className="report">
         <CompareTable />
-        <QuoteWall />
       </div>
 
       <footer className="site-footer">
         <div>
-          <p className="footer-title">Cursor for Datadog</p>
-          <p>Grok Bot for Datadog sales</p>
+          <BrandLockup size="sm" />
+          <p className="footer-title">Grok Bot for Thomson Reuters GTM</p>
         </div>
         <address className="footer-contact">
-          <p>Datadog&apos;s existing Cursor contact</p>
-          <strong>Madeline Ingleby</strong>
-          <a href="mailto:madeline.ingleby@cursor.com">
-            madeline.ingleby@cursor.com
+          <p>Your Cursor account executive</p>
+          <strong>Nick Scallion</strong>
+          <a href="mailto:nick.scallion@cursor.com">
+            nick.scallion@cursor.com
           </a>
         </address>
+        <form action="/api/logout" method="post">
+          <button type="submit">Lock page</button>
+        </form>
       </footer>
     </main>
   );

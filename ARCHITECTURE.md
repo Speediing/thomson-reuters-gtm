@@ -1,38 +1,15 @@
 # Site architecture
 
-## Problem
+The protected page keeps the approved report, storyboard, and agent-computer architecture. It opens with original watercolor art, then places the hero on a pinned cream paper band.
 
-The site must feel specific to Thomson Reuters, protect every customer route with one shared password, and stay small enough for an account team to maintain.
+`src/data/jobs.ts` owns the three customer scenarios. Each storyboard contains three working frames followed by one finished artifact. `src/components/JobSection.tsx` separates that final frame and gives it to `ChapterPayoff`.
 
-## Usage
+`src/components/RosterChart.tsx` renders six agent computers from `src/data/fleet.ts`. `src/components/GrokBotWindow.tsx` renders the working desk. Chat is the first desktop column and the agent computer is the second.
 
-The visitor opens `/`, enters the shared password, and returns to the protected page. The page starts with a watercolor scene and a pinned cream paper hero. It then shows six agent computers and three scene timelines. Every timeline ends with the finished artifact. The visitor can lock the page from the footer.
+`src/data/screens.ts` maps each agent message to the tool open on its computer. `src/components/SiteScreens.tsx` renders those tool views. The interactive layer stays inside the existing demo playback model.
 
-## Shape
+`src/lib/hero-telemetry.wgsl` and `src/components/HeroTelemetry.tsx` retain the template's vgpu treatment with customer-specific computer artwork.
 
-`src/lib/site-content.ts` owns the `SiteContent` model and all customer copy. A use case has exactly three working frames followed by one `ArtifactFrame`. The tuple makes the final artifact part of the page model.
+The password boundary runs in `src/middleware.ts` and `src/app/(protected)/layout.tsx`. `src/lib/auth.ts` derives the session token from `SITE_PASSWORD`. Login and logout routes own the cookie lifecycle.
 
-`src/app/(protected)/page.tsx` renders the report as a server component. `src/components/agent-desk.tsx` owns the frame selector. It always renders chat first and the agent computer second. The first desktop column is therefore chat and the second is the computer.
-
-`src/app/api/login/route.ts` parses the external request. `src/lib/auth.ts` owns password comparison, signed access tokens, cookie policy, and safe return paths. `src/middleware.ts` redirects anonymous root requests. `src/app/(protected)/layout.tsx` repeats the token check at the authoritative page boundary.
-
-The public interface stays small. Content enters through one typed object. Authentication enters through four pure functions and one cookie name.
-
-## Synthesis decision
-
-The chosen shape keeps the page on the server and sends only the scene selectors to the browser. It follows the approved live architecture. A watercolor header opens the page. A report contains the hero, agent fleet, sample job index, numbered job sections, comparison, and footer. The first pass job cards and generic landing-page sections were deleted.
-
-## Tradeoffs accepted
-
-- The account team edits one long content file in exchange for a single source of truth.
-- The scene model uses a fixed four-frame tuple. A new use case must include a finished artifact.
-- The repository stores the official customer wordmark in exchange for a stable lockup without a runtime request.
-- The password gate controls access but does not replace identity-based authentication.
-
-## Alternatives considered
-
-A fully client-rendered page lost because it sends static content and layout code to the browser. Per-section content files lost because this site has one customer and one page. Proxy-only access control lost because request interception should not be the only protection. Reusing prior customer watercolor art lost because the restyle needs original customer-specific artwork.
-
-## Open risk
-
-The wordmark is a stored copy of a customer-hosted asset. Future brand changes require replacing that file from the source URL named in `src/components/brand-lockup.tsx`. The watercolor header is original generated artwork and contains no customer mark. The official mark remains a separate asset.
+The official customer wordmark is bundled from the Thomson Reuters source named in `src/components/BrandLockup.tsx`. The watercolor header is original artwork and contains no customer mark.

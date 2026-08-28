@@ -1,12 +1,12 @@
 import type { CroJob, JobId } from "@/data/types";
 import { Storyboard } from "./Storyboard";
 import { ChapterPayoff } from "./ChapterPayoff";
-import { JobMore } from "./JobMore";
+import { JobDemo } from "./JobDemo";
 
 const JOB_ART: Record<JobId, string> = {
-  "standardize-room": "/brand/watercolor-room.png",
-  "legal-redlines": "/brand/watercolor-deal.png",
-  "attach-engine": "/brand/watercolor-attach.png",
+  "standardize-room": "/brand/thomson-reuters-watercolor-header.jpg",
+  "legal-redlines": "/brand/thomson-reuters-watercolor-header.jpg",
+  "attach-engine": "/brand/thomson-reuters-watercolor-header.jpg",
 };
 
 export function JobSection({ job }: { job: CroJob }) {
@@ -40,7 +40,11 @@ export function JobSection({ job }: { job: CroJob }) {
         {payoff ? (
           <ChapterPayoff beat={payoff} wash={JOB_ART[job.id]} />
         ) : null}
-        <JobMore job={job} />
+        <div className="agent-desk-section">
+          <p className="eyebrow">Agent desk</p>
+          <h3>Chat on the left. Computer on the right.</h3>
+          <JobDemo job={job} />
+        </div>
       </div>
     </section>
   );

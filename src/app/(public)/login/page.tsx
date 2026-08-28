@@ -7,8 +7,11 @@ export default function LoginPage() {
     <main className="login-shell">
       <section className="login-card" aria-labelledby="login-title">
         <BrandLockup size="md" />
-        <p className="eyebrow">Grok Bot for Datadog sales</p>
+        <p className="eyebrow">Private working session</p>
         <h1 id="login-title">Enter the site password</h1>
+        <p className="login-lede">
+          Open the Thomson Reuters and SpaceXAI GTM leave-behind.
+        </p>
         <Suspense fallback={null}>
           <LoginForm />
         </Suspense>

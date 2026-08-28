@@ -1,13 +1,3 @@
-export type ClipId =
-  | "01-morning-inbox"
-  | "02-prospecting-pg"
-  | "03-slides-granola"
-  | "04-engineer-bugbot"
-  | "05-forecast-sfdc"
-  | "06-customer-expert"
-  | "07-customer-exec-brief"
-  | "08-chief-groupchat";
-
 export type JobId =
   | "standardize-room"
   | "legal-redlines"
@@ -56,8 +46,8 @@ export type StoryVisual =
   | {
       kind: "live-transcript";
       timestamp: string;
-      speaker: string;
-      quote: string;
+      label: string;
+      detail: string;
       signals: string[];
     }
   | {
@@ -71,7 +61,7 @@ export type StoryVisual =
       kind: "procurement-email";
       sender: string;
       subject: string;
-      questions: number;
+      questions: string;
     }
   | {
       kind: "answers-found";
@@ -227,14 +217,6 @@ export type DemoThread = {
   messages: DemoMessage[];
 };
 
-export type Clip = {
-  id: ClipId;
-  file: string;
-  poster: string;
-  title: string;
-  caption: string;
-};
-
 export type CroJob = {
   id: JobId;
   number: number;
@@ -246,7 +228,6 @@ export type CroJob = {
   storyboard: StoryBeat[];
   unlock: string;
   outcome: string;
-  clips: ClipId[];
   demo: DemoThread;
 };
 

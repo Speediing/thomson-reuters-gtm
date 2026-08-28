@@ -4,30 +4,36 @@ import { extname, join, relative } from "node:path";
 const root = new URL("../", import.meta.url).pathname;
 const requiredFiles = [
   ".env.example",
-  "src/app/(protected)/page.tsx",
   "src/app/(protected)/layout.tsx",
+  "src/app/(protected)/page.tsx",
   "src/app/(public)/login/page.tsx",
   "src/app/api/login/route.ts",
   "src/app/api/logout/route.ts",
-  "src/app/icon.svg",
+  "src/app/globals.css",
   "src/app/layout.tsx",
-  "src/components/agent-desk.tsx",
-  "src/components/brand-lockup.tsx",
-  "src/components/login-form.tsx",
+  "src/components/BrandLockup.tsx",
+  "src/components/ChapterPayoff.tsx",
+  "src/components/GrokBotWindow.tsx",
+  "src/components/JobSection.tsx",
+  "src/components/RosterChart.tsx",
+  "src/data/fleet.ts",
+  "src/data/jobs.ts",
+  "src/data/screens.ts",
   "src/lib/auth.ts",
-  "src/lib/site-content.ts",
+  "src/lib/gate.ts",
   "src/middleware.ts",
   "public/brand/spacexai.svg",
   "public/brand/thomson-reuters-watercolor-header.jpg",
   "public/brand/thomson-reuters.svg",
 ];
-const textExtensions = new Set([".css", ".mjs", ".ts", ".tsx", ".svg"]);
+const textExtensions = new Set([".css", ".mjs", ".ts", ".tsx", ".svg", ".wgsl"]);
 const sourceFolders = ["src", "public"];
 const sourceResidue = [
   ["data", "dog"].join(""),
   ["sea", "gate"].join(""),
-  ["aster", " peak"].join(""),
   ["ac", "me"].join(""),
+  ["kri", "sta"].join(""),
+  ["made", "line"].join(""),
 ];
 const priorColors = [
   "181512",
@@ -98,81 +104,73 @@ for (const color of priorColors) {
   check(!source.includes(color), `Found prior palette value: ${color}`);
 }
 
-check(!source.includes(String.fromCodePoint(8212)), "Found an em dash in customer-facing source");
-check(!source.includes("<blockquote"), "Found a quote surface in customer-facing source");
+check(!source.includes(String.fromCodePoint(8212)), "Found an em dash in customer source");
+check(!source.includes("<blockquote"), "Found an invented quote surface");
 check(!existsSync(join(root, "app")), "Found obsolete root app directory");
 check(!existsSync(join(root, "components")), "Found obsolete root components directory");
 check(!existsSync(join(root, "lib")), "Found obsolete root lib directory");
+check(!existsSync(join(root, "public/avatars")), "Found inherited avatar artwork");
+check(!existsSync(join(root, "public/media")), "Found inherited media artwork");
+check(!existsSync(join(root, "private/media")), "Found inherited private media");
+check(
+  !existsSync(join(root, "public/brand", ["data", "dog-wordmark.svg"].join(""))),
+  "Found inherited wordmark",
+);
 
-if (existsSync(join(root, "src/lib/site-content.ts"))) {
-  const content = read("src/lib/site-content.ts");
-  check(content.includes('title: "Thomson Reuters x SpaceXAI"'), "Missing customer title");
-  check(content.includes('name: "Nick Scallion"'), "Missing account executive");
-  check(content.includes('email: "nick.scallion@cursor.com"'), "Missing account executive email");
-  check(
-    (content.match(/kicker: "Finished artifact"/g) ?? []).length === 3,
-    "Every sample must end in one artifact frame",
-  );
-  check((content.match(/frames: \[/g) ?? []).length === 3, "Expected three scene timelines");
-  check(
-    content.includes("A fleet of agents, each with its own computer."),
-    "The hero does not establish the agent fleet",
-  );
-}
+const page = read("src/app/(protected)/page.tsx");
+check(page.includes("A fleet of agents, each with its own computer."), "Missing fleet hero");
+check(page.includes("thomson-reuters-watercolor-header.jpg"), "Missing watercolor header");
+check(page.includes("<RosterChart />"), "Missing fleet computers");
+check(page.includes("Nick Scallion"), "Missing account executive");
+check(page.includes("nick.scallion@cursor.com"), "Missing account executive email");
 
-if (existsSync(join(root, "src/components/brand-lockup.tsx"))) {
-  const lockup = read("src/components/brand-lockup.tsx");
-  check(
-    lockup.includes(
-      "https://www.thomsonreuters.com/etc.clientlibs/uefalcon/clientlibs/clientlib-bayberry/resources/images/tr-rebranded-logo.svg",
-    ),
-    "The lockup does not use the official Thomson Reuters asset",
-  );
-}
+const layout = read("src/app/layout.tsx");
+check(layout.includes("Thomson Reuters x SpaceXAI"), "Missing customer title");
+check(layout.includes("Geist, Geist_Mono"), "Template Geist fonts are missing");
 
-if (existsSync(join(root, "src/app/globals.css"))) {
-  const css = read("src/app/globals.css");
-  check(
-    /\.customer-wordmark\s*\{[^}]*height:\s*(16|17|18)px/s.test(css),
-    "The customer wordmark is not a 16px to 18px lockup",
-  );
-  check(css.includes(".watercolor-header"), "Missing the watercolor header treatment");
-  check(css.includes(".hero-paper"), "Missing the pinned cream hero paper");
-}
+const jobs = read("src/data/jobs.ts");
+check(
+  (jobs.match(/label: "Finished artifact:/g) ?? []).length === 3,
+  "Every scene timeline must end with one finished artifact",
+);
+check(
+  (jobs.match(/storyboard: \[/g) ?? []).length === 3,
+  "Expected three scene timelines",
+);
 
-if (existsSync(join(root, "src/components/agent-desk.tsx"))) {
-  const desk = read("src/components/agent-desk.tsx");
-  check(
-    desk.indexOf('className="chat-panel"') < desk.indexOf('className="computer-panel"'),
-    "The agent desk must render chat before the computer",
-  );
-  check(
-    desk.includes("data-frame-kind={frame.kind}"),
-    "Scene controls do not expose their frame kind",
-  );
-  check(
-    desk.includes('className="finished-artifact"'),
-    "The last scene has no finished artifact treatment",
-  );
-}
+const lockup = read("src/components/BrandLockup.tsx");
+check(lockup.includes("www.thomsonreuters.com"), "Wordmark source is not Thomson Reuters");
+check(lockup.includes("/brand/thomson-reuters.svg"), "Official wordmark is not bundled");
 
-if (existsSync(join(root, "src/lib/auth.ts"))) {
-  const auth = read("src/lib/auth.ts");
-  check(auth.includes("SITE_PASSWORD"), "Password validation does not use SITE_PASSWORD");
-  check(auth.includes("httpOnly: true"), "The access cookie is not HttpOnly");
-  check(auth.includes('sameSite: "lax"'), "The access cookie is missing SameSite=Lax");
-}
+const css = read("src/app/globals.css");
+check(css.includes("--brand-h: 17px"), "Customer lockup is not 15px to 18px");
+check(css.includes(".report-paper"), "Missing cream hero paper");
+check(css.includes(".paper-pin"), "Missing paper pins");
+check(css.includes(".agent-computer"), "Missing computer fleet styling");
 
-if (existsSync(join(root, "src/app/layout.tsx"))) {
-  const layout = read("src/app/layout.tsx");
-  check(layout.includes("Geist, Geist_Mono"), "The template Geist fonts are missing");
-}
+const desk = read("src/components/GrokBotWindow.tsx");
+check(
+  desk.indexOf('className="gb-thread"') < desk.indexOf('className="pc-screen pc-desk"'),
+  "Agent desk must render chat before the computer",
+);
 
-if (existsSync(join(root, "package.json"))) {
-  const packageJson = JSON.parse(read("package.json"));
-  check(packageJson.dependencies?.vgpu === "^0.3.1", "The template vgpu dependency changed");
-  check(packageJson.dependencies?.next === "^15.5.24", "The template Next dependency changed");
-}
+const payoff = read("src/components/ChapterPayoff.tsx");
+check(
+  payoff.includes('data-frame-kind="artifact"'),
+  "Finished scene is not marked as an artifact",
+);
+
+const auth = read("src/lib/auth.ts");
+check(auth.includes("process.env.SITE_PASSWORD"), "Password gate does not use SITE_PASSWORD");
+check(!auth.includes("land2expand"), "Password is hardcoded in application source");
+
+const env = read(".env.example");
+check(env.includes("SITE_PASSWORD=land2expand"), "Example password is incorrect");
+
+const packageJson = JSON.parse(read("package.json"));
+check(packageJson.dependencies?.vgpu === "^0.3.1", "Template vgpu dependency changed");
+check(packageJson.dependencies?.next === "^15.5.24", "Template Next dependency changed");
+check(packageJson.dependencies?.react === "^19.1.9", "Template React dependency changed");
 
 if (failures.length) {
   console.error(failures.join("\n"));

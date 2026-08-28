@@ -5,7 +5,14 @@ function safeNext(value: string | null | undefined): string {
   if (!value || !value.startsWith("/") || value.startsWith("//")) {
     return "/";
   }
-  return value;
+  try {
+    const url = new URL(value, "https://local.invalid");
+    return url.origin === "https://local.invalid"
+      ? `${url.pathname}${url.search}${url.hash}`
+      : "/";
+  } catch {
+    return "/";
+  }
 }
 
 export async function POST(request: Request) {

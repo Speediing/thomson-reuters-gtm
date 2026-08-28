@@ -1,10 +1,6 @@
-# Grok Bot for Datadog GTM
+# Thomson Reuters x SpaceXAI
 
-Passworded site. Grok Bot from SpaceXAI, for Datadog GTM.
-
-## What it is
-
-Three GTM jobs on one page. Each job has a short problem statement, an interactive Grok Bot demo, and the matching Krista Letz clips under that demo. Below that: a light index of the clips and the public Grok Bot quote wall.
+This private Next.js site shows three sample Grok Bot jobs for the Thomson Reuters account team.
 
 ## Run locally
 
@@ -14,18 +10,13 @@ npm install
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000). Default password is `land2expand` (override with `SITE_PASSWORD`).
+Open [http://localhost:3000](http://localhost:3000) and enter the configured `SITE_PASSWORD`.
 
-## Krista clips
-
-Download into `private/media/krista-clips/` from the GitHub release (served only through the passworded `/api/media/...` route):
+## Verify
 
 ```bash
-gh release download krista-gtm-clips-720p-2026-08-26 \
-  --repo Speediing/grok-bot-quotes \
-  --dir private/media/krista-clips
+npm run verify
+npm run typecheck
+npm run lint
+npm run build
 ```
-
-## Deploy
-
-Preview only under the `jasonwiker` Vercel team, project name `datadog-cro`. Set `SITE_PASSWORD=land2expand`. Do not promote to a public production domain until Jason says so.

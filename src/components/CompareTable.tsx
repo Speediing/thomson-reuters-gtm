@@ -1,30 +1,35 @@
-const TOOLS = ["Grok Bot", "Claude Cowork", "ChatGPT", "Perplexity"] as const;
+const TOOLS = [
+  "Grok Bot",
+  "Computer agent",
+  "Chat assistant",
+  "Research assistant",
+] as const;
 
 const ROWS: { label: string; values: string[] }[] = [
   {
-    label: "What it is",
+    label: "What starts the work",
     values: [
-      "An always-on agent team with its own computers, working across your tools",
-      "General computer agent",
-      "General AI assistant",
-      "AI research engine",
+      "An approved signal, event, or schedule",
+      "A person assigns a task",
+      "A person opens a chat",
+      "A person asks a question",
     ],
   },
   {
-    label: "What starts it",
+    label: "Where the work happens",
     values: [
-      "Always on — it starts without a prompt",
-      "You assign a task",
-      "You start a chat or task",
-      "You ask a question",
+      "Across approved tools on the agent's computer",
+      "Inside the assigned computer task",
+      "Inside one conversation",
+      "Across research sources",
     ],
   },
   {
-    label: "What you get",
+    label: "What comes back",
     values: [
-      "A team of agents working for you 24/7",
+      "A finished brief, pack, or sourced reply",
       "A completed task or artifact",
-      "An answer, analysis, or draft",
+      "An answer or draft",
       "A sourced research answer",
     ],
   },
@@ -33,10 +38,11 @@ const ROWS: { label: string; values: string[] }[] = [
 export function CompareTable() {
   return (
     <section id="compare" className="compare">
-      <h2>Grok Bot comparison</h2>
+      <p className="eyebrow">Working model</p>
+      <h2>This is a working team, not another chat tab.</h2>
       <p className="section-lede">
-        A full team of agents runs in the cloud for you 24/7, starting work
-        without waiting for a prompt.
+        Each agent has its own computer, starts from an approved signal, and
+        returns finished work for review.
       </p>
       <div className="compare-wrap">
         <table className="compare-table">
@@ -57,9 +63,7 @@ export function CompareTable() {
               <tr key={row.label}>
                 <th scope="row">{row.label}</th>
                 {row.values.map((value, index) => (
-                  <td key={TOOLS[index]}>
-                    {value}
-                  </td>
+                  <td key={TOOLS[index]}>{value}</td>
                 ))}
               </tr>
             ))}

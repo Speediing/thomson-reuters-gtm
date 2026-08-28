@@ -1,10 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 
-import { ACCESS_COOKIE, accessTokenMatches } from "@/lib/auth";
+import { AUTH_COOKIE, isValidSession } from "@/lib/auth";
 
-export function middleware(request: NextRequest) {
-  const accessToken = request.cookies.get(ACCESS_COOKIE)?.value;
-  if (accessTokenMatches(accessToken)) {
+export async function middleware(request: NextRequest) {
+  const token = request.cookies.get(AUTH_COOKIE)?.value;
+  if (await isValidSession(token)) {
     return NextResponse.next();
   }
 
