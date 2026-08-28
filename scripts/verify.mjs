@@ -106,7 +106,7 @@ if (existsSync(join(root, "lib/site-content.ts"))) {
   check(content.includes('name: "Nick Scallion"'), "Missing account executive");
   check(content.includes('email: "nick.scallion@cursor.com"'), "Missing account executive email");
   check(
-    (content.match(/kind: "artifact"/g) ?? []).length === 3,
+    (content.match(/kicker: "Finished artifact"/g) ?? []).length === 3,
     "Every sample must end in one artifact frame",
   );
   check((content.match(/frames: \[/g) ?? []).length === 3, "Expected three scene timelines");
