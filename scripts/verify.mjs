@@ -9,6 +9,7 @@ const requiredFiles = [
   "app/(public)/login/page.tsx",
   "app/api/login/route.ts",
   "app/api/logout/route.ts",
+  "app/icon.svg",
   "components/brand-lockup.tsx",
   "components/customer-story.tsx",
   "components/login-form.tsx",

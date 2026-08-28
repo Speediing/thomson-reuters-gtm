@@ -10,3 +10,4 @@ ts	phase	decision	why	evidence	result
 2026-08-28T22:52:00Z	experience	built the customer page around sourced account context and example workflows	the buyer needs a complete leave-behind without invented proof	app/(protected)/page.tsx, lib/site-content.ts	customer experience implemented
 2026-08-28T22:55:00Z	brand	used the current remote wordmark from the customer asset host	the official asset is more reliable than a redrawn mark	components/brand-lockup.tsx	17px lockup implemented
 2026-08-28T23:06:00Z	brand	stored the current official wordmark and kept its source URL in the lockup	the customer host closed connections from the verification browser	public/brand/thomson-reuters.svg, components/brand-lockup.tsx	removed the runtime network dependency
+2026-08-28T23:12:00Z	browser	added the site icon after Chrome exposed a missing favicon	the final browser run should have no failed resource	app/icon.svg	ready for another browser check
