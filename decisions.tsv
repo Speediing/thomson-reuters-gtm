@@ -13,3 +13,6 @@ ts	phase	decision	why	evidence	result
 2026-08-28T23:12:00Z	browser	added the site icon after Chrome exposed a missing favicon	the final browser run should have no failed resource	app/icon.svg	ready for another browser check
 2026-08-28T23:15:00Z	browser	changed logout to a relative redirect	the production server exposed its bind address in an absolute local redirect	app/api/logout/route.ts	logout now preserves the visitor host
 2026-08-28T23:18:00Z	security	made invalid return paths fall back to the home page	the login request is an untrusted network boundary	lib/auth.ts	malformed paths cannot fail the login route
+2026-08-28T23:21:00Z	verification	ran the residue check, strict type check, production build, and dependency audit	each static boundary needs its own direct check	scripts/verify.mjs	all checks green and zero high-severity vulnerabilities
+2026-08-28T23:22:00Z	verification	exercised login, bad password, unlock, workflow switching, and logout in Chrome	the real browser flow is the customer experience	final commit at 1440x960 and 390x844	no console errors, failed requests, or horizontal overflow
+2026-08-28T23:23:00Z	delivery	pushed the complete verified branch	the parent will open the pull request	origin/cursor/thomson-reuters-gtm-bc60	branch current and clean
