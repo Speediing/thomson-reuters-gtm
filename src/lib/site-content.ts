@@ -114,7 +114,7 @@ export const siteContent = {
       icon: "brief",
       assignment: "Pull account history and current public signals.",
       computer: "Research desk",
-      status: "Reading 6 sources",
+      status: "Reading approved sources",
       output: "Brief in progress",
     },
     {
@@ -146,7 +146,7 @@ export const siteContent = {
       icon: "procurement",
       assignment: "Sort the questions and draft a sourced response.",
       computer: "Deal room",
-      status: "Reviewing 4 questions",
+      status: "Reviewing the request",
       output: "Reply in progress",
     },
     {
@@ -189,7 +189,7 @@ export const siteContent = {
           kind: "work",
           at: "9:18 AM",
           label: "Question lands",
-          summary: "The agent captures the question without turning it into a fake quote.",
+          summary: "The agent records the question as an open item for the account team.",
           chat: [
             { from: "agent", body: "A question came up about how CoCounsel fits the current workflow." },
             { from: "agent", body: "I am checking approved product material now." },
@@ -197,7 +197,7 @@ export const siteContent = {
           computer: {
             app: "Live notes",
             title: "Questions to answer",
-            status: "1 new",
+            status: "New question",
             items: ["Current workflow", "CoCounsel fit", "Data handling", "Owner to confirm"],
           },
         },
@@ -214,14 +214,14 @@ export const siteContent = {
             app: "Product library",
             title: "Answer check",
             status: "Rep review",
-            items: ["2 approved sources", "1 answer drafted", "1 question held", "No message sent"],
+            items: ["Approved sources", "Draft answer", "Open question", "No message sent"],
           },
         },
         {
           kind: "artifact",
           at: "9:31 AM",
           label: "Meeting pack ready",
-          summary: "The last frame is the finished work, ready for the seller to review.",
+          summary: "The seller gets the completed meeting pack for review.",
           chat: [
             { from: "agent", body: "The meeting pack is ready. Nothing has been sent." },
             { from: "rep", body: "Open the pack. I will review it before the follow-up." },
@@ -261,7 +261,7 @@ export const siteContent = {
           label: "Request arrives",
           summary: "Grok Bot separates the request into work the right owners can review.",
           chat: [
-            { from: "system", body: "New procurement request. Four questions found." },
+            { from: "system", body: "New procurement request received." },
             { from: "agent", body: "I split product, security, and contract questions." },
           ],
           computer: {
@@ -277,13 +277,13 @@ export const siteContent = {
           label: "Evidence found",
           summary: "The agent searches only the approved places named for the job.",
           chat: [
-            { from: "agent", body: "Three questions match approved source material." },
+            { from: "agent", body: "The product and security questions match approved source material." },
             { from: "agent", body: "The contract question needs the deal owner." },
           ],
           computer: {
             app: "Knowledge search",
             title: "Source check",
-            status: "3 matched",
+            status: "Sources matched",
             items: ["Product guide", "Security response", "Data handling note", "Contract item held"],
           },
         },
@@ -300,14 +300,14 @@ export const siteContent = {
             app: "Response editor",
             title: "Procurement reply",
             status: "Not sent",
-            items: ["3 sourced answers", "1 open item", "Citations attached", "Owner named"],
+            items: ["Sourced answers", "Open contract item", "Citations attached", "Owner named"],
           },
         },
         {
           kind: "artifact",
           at: "5:42 AM",
           label: "Reply ready",
-          summary: "The final frame is a complete reply with one clear review point.",
+          summary: "The account team gets a complete reply with one clear review point.",
           chat: [
             { from: "agent", body: "The reply is ready for account-team review." },
             { from: "rep", body: "Hold it. I will confirm the contract answer first." },
@@ -379,7 +379,7 @@ export const siteContent = {
           label: "Plan narrowed",
           summary: "The agent cuts the list down to one reason to meet and one owner to confirm.",
           chat: [
-            { from: "agent", body: "The brief has one reason to reach out and two facts to confirm." },
+            { from: "agent", body: "The brief has one reason to reach out and a short fact check." },
             { from: "rep", body: "Keep it short. I need the evidence and the next step." },
           ],
           computer: {
@@ -393,7 +393,7 @@ export const siteContent = {
           kind: "artifact",
           at: "Monday 7:15 AM",
           label: "Brief ready",
-          summary: "The final frame is the account brief, not a list of background tasks.",
+          summary: "The seller gets the account brief and chooses the next move.",
           chat: [
             { from: "agent", body: "The account brief is ready. No outreach has been sent." },
             { from: "rep", body: "Open the brief. I will choose the next move." },
@@ -410,7 +410,7 @@ export const siteContent = {
             fields: [
               { label: "Signal", value: "One current change worth checking with the account" },
               { label: "Fit", value: "Approved product material tied to that change" },
-              { label: "Confirm", value: "Two facts for the seller to validate" },
+              { label: "Confirm", value: "The facts the seller should validate" },
               { label: "Next step", value: "One useful conversation, chosen by the seller" },
             ],
           },

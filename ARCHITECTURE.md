@@ -10,11 +10,11 @@ The visitor opens `/`, enters the shared password, and returns to the protected 
 
 ## Shape
 
-`lib/site-content.ts` owns the `SiteContent` model and all customer copy. A use case has exactly three working frames followed by one `ArtifactFrame`. The tuple makes the final artifact part of the page model.
+`src/lib/site-content.ts` owns the `SiteContent` model and all customer copy. A use case has exactly three working frames followed by one `ArtifactFrame`. The tuple makes the final artifact part of the page model.
 
-`app/(protected)/page.tsx` renders the report as a server component. `components/agent-desk.tsx` owns the frame selector. It always renders chat first and the agent computer second. The first desktop column is therefore chat and the second is the computer.
+`src/app/(protected)/page.tsx` renders the report as a server component. `src/components/agent-desk.tsx` owns the frame selector. It always renders chat first and the agent computer second. The first desktop column is therefore chat and the second is the computer.
 
-`app/api/login/route.ts` parses the external request. `lib/auth.ts` owns password comparison, signed access tokens, cookie policy, and safe return paths. `proxy.ts` redirects anonymous root requests. `app/(protected)/layout.tsx` repeats the token check at the authoritative page boundary.
+`src/app/api/login/route.ts` parses the external request. `src/lib/auth.ts` owns password comparison, signed access tokens, cookie policy, and safe return paths. `src/middleware.ts` redirects anonymous root requests. `src/app/(protected)/layout.tsx` repeats the token check at the authoritative page boundary.
 
 The public interface stays small. Content enters through one typed object. Authentication enters through four pure functions and one cookie name.
 
@@ -35,4 +35,4 @@ A fully client-rendered page lost because it sends static content and layout cod
 
 ## Open risk
 
-The wordmark is a stored copy of a customer-hosted asset. Future brand changes require replacing that file from the source URL named in `components/brand-lockup.tsx`. The watercolor header is original generated artwork and contains no customer mark. The official mark remains a separate asset.
+The wordmark is a stored copy of a customer-hosted asset. Future brand changes require replacing that file from the source URL named in `src/components/brand-lockup.tsx`. The watercolor header is original generated artwork and contains no customer mark. The official mark remains a separate asset.

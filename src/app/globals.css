@@ -17,8 +17,8 @@
   --screen-soft: #242725;
   --screen-line: #3b3e3b;
   --screen-text: #f1eee7;
-  --sans: "Helvetica Neue", "Neue Haas Grotesk Text Pro", Arial, sans-serif;
-  --mono: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+  --sans: var(--font-geist-sans), "Helvetica Neue", Arial, sans-serif;
+  --mono: var(--font-geist-mono), "SFMono-Regular", Consolas, monospace;
   --shadow: 0 30px 80px rgb(52 39 25 / 18%);
 }
 
