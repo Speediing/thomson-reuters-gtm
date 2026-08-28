@@ -1,76 +1,42 @@
-import { createHash, createHmac, timingSafeEqual } from "node:crypto";
+export const AUTH_COOKIE = "datadog_cro_session";
 
-export const ACCESS_COOKIE = "thomson_reuters_gtm_access";
+export function sitePassword(): string {
+  return process.env.SITE_PASSWORD || "land2expand";
+}
 
-const TOKEN_SCOPE = "thomson-reuters-gtm:v1";
+function toHex(buffer: ArrayBuffer): string {
+  return [...new Uint8Array(buffer)]
+    .map((byte) => byte.toString(16).padStart(2, "0"))
+    .join("");
+}
 
-export const accessCookieOptions = {
-  httpOnly: true,
-  sameSite: "lax",
-  secure: process.env.NODE_ENV === "production",
-  path: "/",
-  maxAge: 60 * 60 * 24 * 30,
-} as const;
+export async function sessionToken(
+  password: string = sitePassword(),
+): Promise<string> {
+  const data = new TextEncoder().encode(`datadog-cro:${password}`);
+  const digest = await crypto.subtle.digest("SHA-256", data);
+  return toHex(digest);
+}
 
-function sitePassword() {
-  const value = process.env.SITE_PASSWORD;
-  if (!value) {
-    throw new Error("SITE_PASSWORD is required.");
+export async function isValidSession(
+  token: string | undefined | null,
+): Promise<boolean> {
+  if (!token) return false;
+  const expected = await sessionToken();
+  if (token.length !== expected.length) return false;
+  let mismatch = 0;
+  for (let i = 0; i < token.length; i += 1) {
+    mismatch |= token.charCodeAt(i) ^ expected.charCodeAt(i);
   }
-  return value;
+  return mismatch === 0;
 }
 
-function digest(value: string) {
-  return createHash("sha256").update(value).digest();
-}
-
-function matches(left: string, right: string) {
-  return timingSafeEqual(digest(left), digest(right));
-}
-
-export function passwordMatches(input: string) {
-  return matches(input, sitePassword());
-}
-
-export function createAccessToken() {
-  return createHmac("sha256", sitePassword()).update(TOKEN_SCOPE).digest("hex");
-}
-
-export function accessTokenMatches(input: string | undefined) {
-  return input ? matches(input, createAccessToken()) : false;
-}
-
-export function safeNextPath(input: string | undefined) {
-  if (!input?.startsWith("/") || input.startsWith("//")) {
-    return "/";
+export function passwordMatches(input: string): boolean {
+  const expected = sitePassword();
+  if (input.length !== expected.length) return false;
+  let mismatch = 0;
+  for (let i = 0; i < input.length; i += 1) {
+    mismatch |= input.charCodeAt(i) ^ expected.charCodeAt(i);
   }
-
-  try {
-    const url = new URL(input, "https://local.invalid");
-    return url.origin === "https://local.invalid"
-      ? `${url.pathname}${url.search}${url.hash}`
-      : "/";
-  } catch {
-    return "/";
-  }
-}
-
-export type LoginPayload = {
-  password: string;
-  next: string;
-};
-
-export function parseLoginPayload(input: unknown): LoginPayload | null {
-  if (!input || typeof input !== "object" || !("password" in input)) {
-    return null;
-  }
-
-  const password = input.password;
-  const next = "next" in input ? input.next : "/";
-
-  if (typeof password !== "string" || typeof next !== "string") {
-    return null;
-  }
-
-  return { password, next: safeNextPath(next) };
+  return mismatch === 0;
 }

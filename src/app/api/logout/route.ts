@@ -1,12 +1,14 @@
 import { NextResponse } from "next/server";
+import { AUTH_COOKIE } from "@/lib/auth";
 
-import { ACCESS_COOKIE } from "@/lib/auth";
-
-export function POST() {
-  const response = new NextResponse(null, {
-    status: 303,
-    headers: { Location: "/login" },
+export async function POST() {
+  const response = NextResponse.json({ ok: true });
+  response.cookies.set(AUTH_COOKIE, "", {
+    httpOnly: true,
+    sameSite: "lax",
+    secure: process.env.NODE_ENV === "production",
+    path: "/",
+    maxAge: 0,
   });
-  response.cookies.delete(ACCESS_COOKIE);
   return response;
 }

@@ -1,15 +1,30 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  devIndicators: false,
+  transpilePackages: ["vgpu", "@vgpu/core", "@vgpu/wgsl"],
+  turbopack: {
+    rules: {
+      "*.wgsl": {
+        loaders: ["@vgpu/wgsl/loader-webpack"],
+        as: "*.js",
+      },
+    },
+  },
+  webpack(config) {
+    config.module ??= {};
+    config.module.rules ??= [];
+    config.module.rules.push({
+      test: /\.wgsl$/,
+      loader: "@vgpu/wgsl/loader-webpack",
+    });
+    return config;
+  },
   async headers() {
     return [
       {
-        source: "/(.*)",
-        headers: [
-          { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
-          { key: "X-Content-Type-Options", value: "nosniff" },
-          { key: "X-Frame-Options", value: "DENY" },
-        ],
+        source: "/:path*",
+        headers: [{ key: "x-vercel-skip-toolbar", value: "1" }],
       },
     ];
   },

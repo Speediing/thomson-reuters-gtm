@@ -1,28 +1,17 @@
-import { BrandLockup } from "@/components/brand-lockup";
-import { LoginForm } from "@/components/login-form";
-import { safeNextPath } from "@/lib/auth";
+import { Suspense } from "react";
+import { LoginForm } from "@/components/LoginForm";
+import { BrandLockup } from "@/components/BrandLockup";
 
-type LoginPageProps = {
-  searchParams: Promise<Record<string, string | string[] | undefined>>;
-};
-
-export default async function LoginPage({ searchParams }: LoginPageProps) {
-  const params = await searchParams;
-  const next = Array.isArray(params.next) ? params.next[0] : params.next;
-
+export default function LoginPage() {
   return (
-    <main className="login-page">
-      <div className="login-orbit login-orbit-one" aria-hidden="true" />
-      <div className="login-orbit login-orbit-two" aria-hidden="true" />
-      <section className="login-card">
-        <BrandLockup linked={false} />
-        <div className="login-copy">
-          <p className="eyebrow">Private working session</p>
-          <h1>Thomson Reuters x SpaceXAI</h1>
-          <p>Enter the shared password to open the GTM working session.</p>
-        </div>
-        <LoginForm nextPath={safeNextPath(next)} />
-        <p className="login-foot">Prepared for Thomson Reuters</p>
+    <main className="login-shell">
+      <section className="login-card" aria-labelledby="login-title">
+        <BrandLockup size="md" />
+        <p className="eyebrow">Grok Bot for Datadog sales</p>
+        <h1 id="login-title">Enter the site password</h1>
+        <Suspense fallback={null}>
+          <LoginForm />
+        </Suspense>
       </section>
     </main>
   );
