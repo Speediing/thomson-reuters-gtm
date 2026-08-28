@@ -1,0 +1,5 @@
+ts	phase	decision	why	evidence	result
+2026-08-28T22:20:00Z	frame	defined six checks for build, access, branding, ownership, residue, and browser behavior	customer-facing work needs observable completion checks	scripts/verify.mjs	predicate defined
+2026-08-28T22:21:00Z	grounding	used authenticated live deployments as the architecture source	the named reference repositories were not visible to this run	https://datadog-grokbot.vercel.app, https://seagate-grokbot.vercel.app	live pages and bundles captured
+2026-08-28T22:22:00Z	grounding	used the scoped account plan for current Thomson Reuters context	customer copy must use sourced facts and avoid invented claims	internalsphere/account-plan-nick-scallion	context read
+2026-08-28T22:23:00Z	harness	added a rerunnable product and residue check	the empty baseline needs the same checks as the finished site	scripts/verify.mjs	ready for red baseline
