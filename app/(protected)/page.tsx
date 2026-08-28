@@ -1,73 +1,172 @@
+import Image from "next/image";
+import type { CSSProperties } from "react";
+
+import { AgentDesk } from "@/components/agent-desk";
 import { BrandLockup } from "@/components/brand-lockup";
-import { CustomerStory } from "@/components/customer-story";
 import { siteContent } from "@/lib/site-content";
 
 export default function HomePage() {
-  const { hero, heard, useCases, operatingModel, comparison, rollout, close, owner } =
+  const { hero, agents, useCases, accountContext, comparison, rollout, owner } =
     siteContent;
 
   return (
-    <>
+    <main id="top">
       <header className="site-header">
-        <div className="header-inner">
-          <BrandLockup />
-          <nav aria-label="Main navigation">
-            {siteContent.nav.map((item) => (
-              <a href={item.href} key={item.href}>
-                {item.label}
-              </a>
-            ))}
-          </nav>
-          <a className="header-action" href="#plan">
-            Pick the first job
-          </a>
-        </div>
+        <a className="header-brand" href="#top" aria-label="Back to top">
+          <BrandLockup linked={false} />
+        </a>
+        <nav aria-label="On this page">
+          <a href="#fleet">Agent fleet</a>
+          <a href="#use-cases">Use cases</a>
+          <a href="#first-run">First run</a>
+        </nav>
       </header>
 
-      <main>
-        <section className="hero section-shell">
-          <div className="hero-grid">
-            <div className="hero-copy">
-              <p className="eyebrow">{hero.eyebrow}</p>
-              <h1>{hero.title}</h1>
-              <p className="hero-intro">{hero.intro}</p>
-              <div className="hero-actions">
-                <a className="button button-primary" href={hero.primaryAction.href}>
-                  {hero.primaryAction.label}
-                </a>
-                <a className="button button-secondary" href={hero.secondaryAction.href}>
-                  {hero.secondaryAction.label}
-                </a>
-              </div>
-            </div>
-            <div className="hero-index" aria-hidden="true">
-              <span>TR</span>
-              <i />
-              <strong>01</strong>
-            </div>
-          </div>
-          <CustomerStory scenarios={siteContent.scenarios} />
-        </section>
+      <section className="watercolor-header" aria-label="A fleet of agent computers at work">
+        <Image
+          className="watercolor-image"
+          src="/brand/thomson-reuters-watercolor-header.jpg"
+          alt=""
+          width={1280}
+          height={720}
+          sizes="100vw"
+          priority
+        />
+        <div className="watercolor-caption">
+          <span />
+          Six agent computers. One account team in control.
+        </div>
+      </section>
 
-        <section className="signal-rail" aria-label="Sources Grok Bot can use">
-          <p>Approved signals</p>
-          <ul>
-            {siteContent.signals.map((signal) => (
-              <li key={signal}>{signal}</li>
+      <div className="report">
+        <section className="hero-paper" aria-labelledby="hero-title">
+          <span className="paper-pin paper-pin-left" aria-hidden="true" />
+          <span className="paper-pin paper-pin-right" aria-hidden="true" />
+          <div className="hero-copy">
+            <p className="eyebrow">{hero.eyebrow}</p>
+            <h1 id="hero-title">{hero.title}</h1>
+            <p className="hero-intro">{hero.intro}</p>
+          </div>
+          <div className="hero-fleet" aria-hidden="true">
+            {agents.map((agent, index) => (
+              <span key={agent.name} style={{ "--agent-index": index } as CSSProperties}>
+                <i />
+              </span>
             ))}
-          </ul>
+            <p>
+              <strong>6 agents online</strong>
+              Each works from its own computer
+            </p>
+          </div>
         </section>
 
-        <section className="heard section-shell section-pad" id="what-we-heard">
-          <div className="section-heading">
-            <p className="eyebrow">{heard.eyebrow}</p>
-            <h2>{heard.title}</h2>
-            <p>{heard.intro}</p>
+        <section className="fleet-section" id="fleet">
+          <div className="section-lead">
+            <p className="eyebrow">The agent fleet</p>
+            <h2>Give each repeatable job a computer and a clear finish line.</h2>
+            <p>
+              These are working desks, not job descriptions. Each agent opens the
+              right tools, does the background work, and returns a finished artifact.
+            </p>
           </div>
-          <div className="heard-grid">
-            {heard.items.map((item) => (
-              <article key={item.number}>
-                <span>{item.number}</span>
+          <div className="fleet-grid">
+            {agents.map((agent, index) => (
+              <article className="fleet-computer" key={agent.name}>
+                <header>
+                  <span className="traffic" aria-hidden="true">
+                    <i />
+                    <i />
+                    <i />
+                  </span>
+                  <strong>Computer {String(index + 1).padStart(2, "0")}</strong>
+                  <span className="fleet-live">
+                    <i aria-hidden="true" />
+                    Online
+                  </span>
+                </header>
+                <div className="fleet-screen">
+                  <div className={`fleet-agent-icon is-${agent.icon}`} aria-hidden="true">
+                    {String(index + 1).padStart(2, "0")}
+                  </div>
+                  <div>
+                    <h3>{agent.name}</h3>
+                    <p>{agent.assignment}</p>
+                  </div>
+                  <dl>
+                    <div>
+                      <dt>Open on screen</dt>
+                      <dd>{agent.computer}</dd>
+                    </div>
+                    <div>
+                      <dt>Now</dt>
+                      <dd>{agent.status}</dd>
+                    </div>
+                  </dl>
+                </div>
+                <footer>
+                  <span>{agent.output}</span>
+                  <i aria-hidden="true" />
+                </footer>
+              </article>
+            ))}
+          </div>
+        </section>
+
+        <section className="use-case-intro" id="use-cases">
+          <p className="eyebrow">Three sample jobs</p>
+          <h2>Watch the work move from signal to finished artifact.</h2>
+          <p>
+            Every timeline ends with the actual deliverable. Select any frame to see
+            the chat on the left and the agent&apos;s computer on the right.
+          </p>
+          <div className="use-case-links">
+            {useCases.map((useCase) => (
+              <a href={`#${useCase.id}`} key={useCase.id}>
+                <span>Sample {useCase.number}</span>
+                <strong>{useCase.title}</strong>
+                <small>Starts when {useCase.trigger.toLowerCase()}</small>
+              </a>
+            ))}
+          </div>
+        </section>
+
+        <div className="jobs">
+          {useCases.map((useCase) => (
+            <section className="job-section" id={useCase.id} key={useCase.id}>
+              <p className="section-number">{useCase.number}</p>
+              <div>
+                <div className="background-agent">
+                  <span aria-hidden="true" />
+                  <p>
+                    <strong>Background agent active</strong>
+                    <small>
+                      {useCase.trigger} <i aria-hidden="true">→</i> {useCase.activeWork}
+                    </small>
+                  </p>
+                </div>
+                <h2>{useCase.title}</h2>
+                <p className="job-value">{useCase.value}</p>
+                <ul className="source-list" aria-label="Approved source types">
+                  {useCase.sources.map((source) => (
+                    <li key={source}>{source}</li>
+                  ))}
+                </ul>
+                <AgentDesk useCase={useCase} />
+              </div>
+            </section>
+          ))}
+        </div>
+
+        <section className="account-context">
+          <div className="section-lead">
+            <p className="eyebrow">{accountContext.eyebrow}</p>
+            <h2>{accountContext.title}</h2>
+            <p>{accountContext.intro}</p>
+          </div>
+          <div className="context-grid">
+            {accountContext.items.map((item) => (
+              <article key={item.label}>
+                <span>{item.label}</span>
                 <h3>{item.title}</h3>
                 <p>{item.body}</p>
               </article>
@@ -75,129 +174,64 @@ export default function HomePage() {
           </div>
         </section>
 
-        <section className="jobs section-pad" id="agent-jobs">
-          <div className="section-shell">
-            <div className="section-heading section-heading-wide">
-              <p className="eyebrow">{useCases.eyebrow}</p>
-              <h2>{useCases.title}</h2>
-              <p>{useCases.intro}</p>
-            </div>
-            <div className="job-grid">
-              {useCases.items.map((item) => (
-                <article className="job-card" key={item.number}>
-                  <div className="job-card-top">
-                    <span>{item.number}</span>
-                    <p>{item.stage}</p>
-                  </div>
-                  <h3>{item.title}</h3>
-                  <p className="job-body">{item.body}</p>
-                  <ul>
-                    {item.sources.map((source) => (
-                      <li key={source}>{source}</li>
-                    ))}
-                  </ul>
-                  <div className="job-output">
-                    <span>Output</span>
-                    <strong>{item.output}</strong>
-                  </div>
-                </article>
-              ))}
-            </div>
+        <section className="comparison" aria-labelledby="comparison-title">
+          <div>
+            <p className="eyebrow">Working model</p>
+            <h2 id="comparison-title">{comparison.title}</h2>
+            <p>{comparison.intro}</p>
           </div>
-        </section>
-
-        <section className="operating section-shell section-pad">
-          <div className="operating-lead">
-            <p className="eyebrow">{operatingModel.eyebrow}</p>
-            <h2>{operatingModel.title}</h2>
-            <p>{operatingModel.intro}</p>
-          </div>
-          <ol className="operating-steps">
-            {operatingModel.steps.map((step) => (
-              <li key={step.number}>
-                <span>{step.number}</span>
-                <div>
-                  <h3>{step.title}</h3>
-                  <p>{step.body}</p>
-                </div>
-              </li>
-            ))}
-          </ol>
-        </section>
-
-        <section className="comparison section-pad">
-          <div className="section-shell">
-            <div className="section-heading">
-              <p className="eyebrow">{comparison.eyebrow}</p>
-              <h2>{comparison.title}</h2>
-              <p>{comparison.intro}</p>
+          <div className="comparison-table" role="table" aria-label="Grok Bot and chat comparison">
+            <div className="comparison-row comparison-head" role="row">
+              <span role="columnheader">Question</span>
+              <strong role="columnheader">Grok Bot</strong>
+              <strong role="columnheader">Chat</strong>
             </div>
-            <div className="comparison-table" role="table" aria-label="Chat and Grok Bot comparison">
-              <div className="comparison-row comparison-head" role="row">
-                <span role="columnheader">Working model</span>
-                <strong role="columnheader">Chat</strong>
-                <strong role="columnheader">Grok Bot</strong>
+            {comparison.rows.map((row) => (
+              <div className="comparison-row" role="row" key={row.label}>
+                <span role="rowheader">{row.label}</span>
+                <p role="cell">{row.grokBot}</p>
+                <p role="cell">{row.chat}</p>
               </div>
-              {comparison.rows.map((row) => (
-                <div className="comparison-row" role="row" key={row.label}>
-                  <span role="rowheader">{row.label}</span>
-                  <p role="cell">{row.chat}</p>
-                  <p role="cell">{row.grokBot}</p>
-                </div>
-              ))}
-            </div>
+            ))}
           </div>
         </section>
 
-        <section className="plan section-shell section-pad" id="plan">
-          <div className="section-heading section-heading-wide">
+        <section className="rollout" id="first-run">
+          <div className="section-lead">
             <p className="eyebrow">{rollout.eyebrow}</p>
             <h2>{rollout.title}</h2>
             <p>{rollout.intro}</p>
           </div>
-          <ol className="plan-grid">
-            {rollout.steps.map((step, index) => (
-              <li key={step.time}>
-                <span>{step.time}</span>
-                <strong>0{index + 1}</strong>
+          <ol>
+            {rollout.steps.map((step) => (
+              <li key={step.label}>
+                <span>{step.label}</span>
                 <h3>{step.title}</h3>
                 <p>{step.body}</p>
               </li>
             ))}
           </ol>
+          <a className="cta" href={`mailto:${owner.email}`}>
+            Plan the first working session
+            <span aria-hidden="true">↗</span>
+          </a>
         </section>
+      </div>
 
-        <section className="close">
-          <div className="close-mark" aria-hidden="true">
-            <span />
-            <span />
-            <span />
-            <span />
-            <span />
-          </div>
-          <div className="section-shell close-inner">
-            <p className="eyebrow">{close.eyebrow}</p>
-            <h2>{close.title}</h2>
-            <p>{close.body}</p>
-            <a className="button button-light" href={`mailto:${owner.email}`}>
-              {close.action}
-            </a>
-          </div>
-        </section>
-      </main>
-
-      <footer>
-        <div className="footer-inner section-shell">
-          <BrandLockup />
-          <p>
-            Your Cursor account executive
-            <a href={`mailto:${owner.email}`}>{owner.name}</a>
-          </p>
-          <form action="/api/logout" method="post">
-            <button type="submit">Lock page</button>
-          </form>
+      <footer className="site-footer">
+        <div>
+          <BrandLockup linked={false} />
+          <p>Grok Bot for Thomson Reuters GTM</p>
         </div>
+        <address>
+          <span>Your Cursor account executive</span>
+          <strong>{owner.name}</strong>
+          <a href={`mailto:${owner.email}`}>{owner.email}</a>
+        </address>
+        <form action="/api/logout" method="post">
+          <button type="submit">Lock page</button>
+        </form>
       </footer>
-    </>
+    </main>
   );
 }

@@ -1,76 +1,98 @@
-export type ScenarioId = "meeting" | "procurement" | "signal";
+export type AgentIcon =
+  | "brief"
+  | "call"
+  | "follow-up"
+  | "answer"
+  | "procurement"
+  | "expansion";
 
-export type ScenarioStep = {
-  label: string;
-  detail: string;
-  state: "complete" | "working" | "ready";
+export type FleetAgent = {
+  name: string;
+  icon: AgentIcon;
+  assignment: string;
+  computer: string;
+  status: string;
+  output: string;
 };
 
-export type AgentScenario = {
-  id: ScenarioId;
-  tab: string;
-  time: string;
-  trigger: string;
-  account: string;
+export type ChatMessage = {
+  from: "agent" | "rep" | "system";
+  body: string;
+};
+
+export type ComputerPanel = {
+  app: string;
+  title: string;
+  status: string;
+  items: readonly string[];
+};
+
+type WorkingFrame = {
+  kind: "trigger" | "work" | "review";
+  at: string;
+  label: string;
   summary: string;
-  steps: readonly ScenarioStep[];
-  deliverable: string;
+  chat: readonly ChatMessage[];
+  computer: ComputerPanel;
+};
+
+export type ArtifactFrame = {
+  kind: "artifact";
+  at: string;
+  label: string;
+  summary: string;
+  chat: readonly ChatMessage[];
+  computer: ComputerPanel;
+  artifact: {
+    kicker: string;
+    title: string;
+    fields: readonly { label: string; value: string }[];
+  };
+};
+
+export type SceneFrames = readonly [
+  WorkingFrame,
+  WorkingFrame,
+  WorkingFrame,
+  ArtifactFrame,
+];
+
+export type UseCase = {
+  id: "meeting" | "procurement" | "expansion";
+  number: string;
+  title: string;
+  trigger: string;
+  value: string;
+  activeWork: string;
+  sources: readonly string[];
+  frames: SceneFrames;
 };
 
 export type SiteContent = {
   title: string;
-  nav: readonly { label: string; href: string }[];
   hero: {
     eyebrow: string;
     title: string;
     intro: string;
-    primaryAction: { label: string; href: string };
-    secondaryAction: { label: string; href: string };
   };
-  signals: readonly string[];
-  scenarios: readonly [AgentScenario, ...AgentScenario[]];
-  heard: {
+  agents: readonly FleetAgent[];
+  useCases: readonly [UseCase, UseCase, UseCase];
+  accountContext: {
     eyebrow: string;
     title: string;
     intro: string;
-    items: readonly { number: string; title: string; body: string }[];
-  };
-  useCases: {
-    eyebrow: string;
-    title: string;
-    intro: string;
-    items: readonly {
-      number: string;
-      stage: string;
-      title: string;
-      body: string;
-      output: string;
-      sources: readonly string[];
-    }[];
-  };
-  operatingModel: {
-    eyebrow: string;
-    title: string;
-    intro: string;
-    steps: readonly { number: string; title: string; body: string }[];
+    items: readonly { label: string; title: string; body: string }[];
   };
   comparison: {
-    eyebrow: string;
     title: string;
     intro: string;
-    rows: readonly { label: string; chat: string; grokBot: string }[];
+    rows: readonly { label: string; grokBot: string; chat: string }[];
   };
   rollout: {
     eyebrow: string;
     title: string;
     intro: string;
-    steps: readonly { time: string; title: string; body: string }[];
-  };
-  close: {
-    eyebrow: string;
-    title: string;
-    body: string;
-    action: string;
+    steps: readonly { label: string; title: string; body: string }[];
   };
   owner: {
     name: "Nick Scallion";
@@ -80,280 +102,395 @@ export type SiteContent = {
 
 export const siteContent = {
   title: "Thomson Reuters x SpaceXAI",
-  nav: [
-    { label: "What we heard", href: "#what-we-heard" },
-    { label: "Agent jobs", href: "#agent-jobs" },
-    { label: "30-day plan", href: "#plan" },
-  ],
   hero: {
-    eyebrow: "A proactive GTM agent for Thomson Reuters",
-    title: "Give every seller a research desk that never closes.",
+    eyebrow: "Grok Bot for Thomson Reuters GTM",
+    title: "A fleet of agents, each with its own computer.",
     intro:
-      "Grok Bot follows the work around a deal, gathers the right context, and prepares the next move. The rep stays in control before anything leaves the building.",
-    primaryAction: { label: "See the first 30 days", href: "#plan" },
-    secondaryAction: { label: "Open a sample workflow", href: "#sample-workflow" },
+      "They handle the work around every account. Research, meeting prep, follow-up, and approved answers keep moving while sellers stay with the customer.",
   },
-  signals: [
-    "Call notes",
-    "CRM",
-    "Inbox",
-    "Approved product content",
-    "Public account signals",
+  agents: [
+    {
+      name: "Account brief",
+      icon: "brief",
+      assignment: "Pull account history and current public signals.",
+      computer: "Research desk",
+      status: "Reading 6 sources",
+      output: "Brief in progress",
+    },
+    {
+      name: "Call notes",
+      icon: "call",
+      assignment: "Turn the live conversation into a clear record.",
+      computer: "Meeting workspace",
+      status: "Listening",
+      output: "Notes updating",
+    },
+    {
+      name: "Follow-up",
+      icon: "follow-up",
+      assignment: "Build the recap, open questions, and next steps.",
+      computer: "Document editor",
+      status: "Drafting",
+      output: "Pack in progress",
+    },
+    {
+      name: "Product answer",
+      icon: "answer",
+      assignment: "Find the approved answer and keep the source attached.",
+      computer: "Knowledge search",
+      status: "Checking sources",
+      output: "Answer in progress",
+    },
+    {
+      name: "Procurement",
+      icon: "procurement",
+      assignment: "Sort the questions and draft a sourced response.",
+      computer: "Deal room",
+      status: "Reviewing 4 questions",
+      output: "Reply in progress",
+    },
+    {
+      name: "Account expansion",
+      icon: "expansion",
+      assignment: "Find the next useful team, signal, and reason to meet.",
+      computer: "Account map",
+      status: "Mapping the account",
+      output: "Plan in progress",
+    },
   ],
-  scenarios: [
+  useCases: [
     {
       id: "meeting",
-      tab: "Call ended",
-      time: "2 minutes ago",
-      trigger: "The buyer asked how CoCounsel fits its current AI stack.",
-      account: "Legal team expansion",
-      summary:
-        "Grok Bot turns the room into a clear follow-up while the details are still fresh.",
-      steps: [
+      number: "01",
+      title: "Build the next meeting pack while the call is live.",
+      trigger: "A customer call starts",
+      value:
+        "The seller leaves the call with a recap, sourced answers, open questions, and the next meeting plan.",
+      activeWork: "Listening to the call and updating the meeting workspace",
+      sources: ["Call notes", "CRM", "Approved product material"],
+      frames: [
         {
-          label: "Call notes",
-          detail: "Pulled the buyer questions and named stakeholders.",
-          state: "complete",
+          kind: "trigger",
+          at: "9:05 AM",
+          label: "Call starts",
+          summary: "Grok Bot opens the account brief and starts a clean record.",
+          chat: [
+            { from: "system", body: "Customer call started. Notes are private to the account team." },
+            { from: "agent", body: "I opened the account history and the current meeting plan." },
+          ],
+          computer: {
+            app: "Meeting workspace",
+            title: "Account brief",
+            status: "Listening",
+            items: ["Attendees", "Open opportunities", "Last meeting", "Current questions"],
+          },
         },
         {
-          label: "Approved sources",
-          detail: "Matched the questions to current CoCounsel material.",
-          state: "complete",
+          kind: "work",
+          at: "9:18 AM",
+          label: "Question lands",
+          summary: "The agent captures the question without turning it into a fake quote.",
+          chat: [
+            { from: "agent", body: "A question came up about how CoCounsel fits the current workflow." },
+            { from: "agent", body: "I am checking approved product material now." },
+          ],
+          computer: {
+            app: "Live notes",
+            title: "Questions to answer",
+            status: "1 new",
+            items: ["Current workflow", "CoCounsel fit", "Data handling", "Owner to confirm"],
+          },
         },
         {
-          label: "Rep review",
-          detail: "Prepared a recap, open questions, and next-step deck.",
-          state: "ready",
+          kind: "review",
+          at: "9:27 AM",
+          label: "Sources checked",
+          summary: "The agent attaches approved sources and marks what still needs an owner.",
+          chat: [
+            { from: "agent", body: "I found the approved CoCounsel material and linked each answer." },
+            { from: "rep", body: "Keep the open data question in the pack for review." },
+          ],
+          computer: {
+            app: "Product library",
+            title: "Answer check",
+            status: "Rep review",
+            items: ["2 approved sources", "1 answer drafted", "1 question held", "No message sent"],
+          },
+        },
+        {
+          kind: "artifact",
+          at: "9:31 AM",
+          label: "Meeting pack ready",
+          summary: "The last frame is the finished work, ready for the seller to review.",
+          chat: [
+            { from: "agent", body: "The meeting pack is ready. Nothing has been sent." },
+            { from: "rep", body: "Open the pack. I will review it before the follow-up." },
+          ],
+          computer: {
+            app: "Document editor",
+            title: "Meeting pack",
+            status: "Ready for review",
+            items: ["Recap", "Sourced answers", "Open questions", "Next meeting plan"],
+          },
+          artifact: {
+            kicker: "Finished artifact",
+            title: "CoCounsel workflow follow-up",
+            fields: [
+              { label: "Recap", value: "The account team's clean record of the discussion" },
+              { label: "Answer", value: "Approved product material linked at the claim" },
+              { label: "Open item", value: "Data question held for the right owner" },
+              { label: "Next step", value: "Review the pack before the follow-up goes out" },
+            ],
+          },
         },
       ],
-      deliverable: "Follow-up pack ready for review",
     },
     {
       id: "procurement",
-      tab: "Question arrived",
-      time: "7 minutes ago",
-      trigger: "Procurement sent a security and data-handling question.",
-      account: "ONESOURCE evaluation",
-      summary:
-        "Grok Bot finds the approved answer, shows the source, and drafts a reply without sending it.",
-      steps: [
+      number: "02",
+      title: "Answer a procurement question with the source attached.",
+      trigger: "A procurement email arrives",
+      value:
+        "The account team gets a checked draft. Product, security, and contract questions stay separate.",
+      activeWork: "Sorting the request and checking approved source material",
+      sources: ["Inbox", "Security material", "Product docs", "Contract library"],
+      frames: [
         {
-          label: "Request",
-          detail: "Separated product, security, and contract questions.",
-          state: "complete",
+          kind: "trigger",
+          at: "5:27 AM",
+          label: "Request arrives",
+          summary: "Grok Bot separates the request into work the right owners can review.",
+          chat: [
+            { from: "system", body: "New procurement request. Four questions found." },
+            { from: "agent", body: "I split product, security, and contract questions." },
+          ],
+          computer: {
+            app: "Inbox",
+            title: "Procurement request",
+            status: "Unread",
+            items: ["Product fit", "Data handling", "Security review", "Contract term"],
+          },
         },
         {
-          label: "Evidence",
-          detail: "Found the approved response and supporting document.",
-          state: "complete",
+          kind: "work",
+          at: "5:31 AM",
+          label: "Evidence found",
+          summary: "The agent searches only the approved places named for the job.",
+          chat: [
+            { from: "agent", body: "Three questions match approved source material." },
+            { from: "agent", body: "The contract question needs the deal owner." },
+          ],
+          computer: {
+            app: "Knowledge search",
+            title: "Source check",
+            status: "3 matched",
+            items: ["Product guide", "Security response", "Data handling note", "Contract item held"],
+          },
         },
         {
-          label: "Draft",
-          detail: "Built a sourced response for the account team.",
-          state: "ready",
+          kind: "review",
+          at: "5:39 AM",
+          label: "Draft checked",
+          summary: "Every answer keeps its source. The open item stays visible.",
+          chat: [
+            { from: "agent", body: "The sourced answers are in the draft." },
+            { from: "agent", body: "I left the contract item open for the deal owner." },
+          ],
+          computer: {
+            app: "Response editor",
+            title: "Procurement reply",
+            status: "Not sent",
+            items: ["3 sourced answers", "1 open item", "Citations attached", "Owner named"],
+          },
+        },
+        {
+          kind: "artifact",
+          at: "5:42 AM",
+          label: "Reply ready",
+          summary: "The final frame is a complete reply with one clear review point.",
+          chat: [
+            { from: "agent", body: "The reply is ready for account-team review." },
+            { from: "rep", body: "Hold it. I will confirm the contract answer first." },
+          ],
+          computer: {
+            app: "Response editor",
+            title: "Sourced procurement reply",
+            status: "Ready for review",
+            items: ["Product answer", "Security answer", "Data answer", "Contract question"],
+          },
+          artifact: {
+            kicker: "Finished artifact",
+            title: "Sourced procurement reply",
+            fields: [
+              { label: "Answered", value: "Product, security, and data handling" },
+              { label: "Held", value: "One contract item for the deal owner" },
+              { label: "Evidence", value: "Approved source linked to each drafted answer" },
+              { label: "Action", value: "Account team reviews and decides when to send" },
+            ],
+          },
         },
       ],
-      deliverable: "Sourced reply ready for review",
     },
     {
-      id: "signal",
-      tab: "Signal found",
-      time: "This morning",
-      trigger: "A target account announced a change in its legal operations team.",
-      account: "New account research",
-      summary:
-        "Grok Bot connects the signal to a relevant Thomson Reuters story and gives the rep a useful reason to reach out.",
-      steps: [
+      id: "expansion",
+      number: "03",
+      title: "Turn account signals into the next useful conversation.",
+      trigger: "A scheduled account review starts",
+      value:
+        "The seller gets one short account brief with the signal, the possible fit, and what to confirm next.",
+      activeWork: "Reading account history and current public signals",
+      sources: ["CRM", "Account plan", "Engagement history", "Public signals"],
+      frames: [
         {
-          label: "Account change",
-          detail: "Summarized the public signal and why it matters.",
-          state: "complete",
+          kind: "trigger",
+          at: "Monday 7:00 AM",
+          label: "Review starts",
+          summary: "The agent opens the account plan before the seller's week begins.",
+          chat: [
+            { from: "system", body: "Scheduled account review started." },
+            { from: "agent", body: "I am checking account history and current public signals." },
+          ],
+          computer: {
+            app: "Account map",
+            title: "Target account",
+            status: "Reviewing",
+            items: ["Active team", "Recent meetings", "Open questions", "Public changes"],
+          },
         },
         {
-          label: "Product fit",
-          detail: "Mapped the signal to approved Westlaw and CoCounsel material.",
-          state: "working",
+          kind: "work",
+          at: "Monday 7:06 AM",
+          label: "Signal connected",
+          summary: "The agent connects one useful signal to approved product material.",
+          chat: [
+            { from: "agent", body: "I found one current signal that may matter to the account." },
+            { from: "agent", body: "I am checking the relevant approved product story." },
+          ],
+          computer: {
+            app: "Research desk",
+            title: "Signal review",
+            status: "Checking fit",
+            items: ["Public signal", "Account history", "Relevant offer", "Evidence to confirm"],
+          },
         },
         {
-          label: "Outreach",
-          detail: "Prepared a short account brief and draft message.",
-          state: "ready",
+          kind: "review",
+          at: "Monday 7:12 AM",
+          label: "Plan narrowed",
+          summary: "The agent cuts the list down to one reason to meet and one owner to confirm.",
+          chat: [
+            { from: "agent", body: "The brief has one reason to reach out and two facts to confirm." },
+            { from: "rep", body: "Keep it short. I need the evidence and the next step." },
+          ],
+          computer: {
+            app: "Account plan",
+            title: "Next conversation",
+            status: "Drafting",
+            items: ["Why this account", "Why now", "What to confirm", "Suggested next step"],
+          },
+        },
+        {
+          kind: "artifact",
+          at: "Monday 7:15 AM",
+          label: "Brief ready",
+          summary: "The final frame is the account brief, not a list of background tasks.",
+          chat: [
+            { from: "agent", body: "The account brief is ready. No outreach has been sent." },
+            { from: "rep", body: "Open the brief. I will choose the next move." },
+          ],
+          computer: {
+            app: "Account plan",
+            title: "Account expansion brief",
+            status: "Ready for review",
+            items: ["Current signal", "Relevant offer", "Evidence", "Next conversation"],
+          },
+          artifact: {
+            kicker: "Finished artifact",
+            title: "Account expansion brief",
+            fields: [
+              { label: "Signal", value: "One current change worth checking with the account" },
+              { label: "Fit", value: "Approved product material tied to that change" },
+              { label: "Confirm", value: "Two facts for the seller to validate" },
+              { label: "Next step", value: "One useful conversation, chosen by the seller" },
+            ],
+          },
         },
       ],
-      deliverable: "Account brief and outreach draft ready",
     },
   ],
-  heard: {
+  accountContext: {
     eyebrow: "Current account context",
-    title: "The opportunity is not another chatbot.",
+    title: "Start where Thomson Reuters already has a reason to test.",
     intro:
-      "The path forward needs to fit the way Thomson Reuters already evaluates models, governs agents, and measures software delivery.",
+      "The account plan points to three practical boundaries for an initial workflow. These are internal account notes, not customer quotes.",
     items: [
       {
-        number: "01",
-        title: "Keep model choice open",
+        label: "01",
+        title: "Keep model routing open",
         body:
-          "The team is evaluating Grok 4.6 inside its own agent workflow. The path needs to preserve routing control.",
+          "Thomson Reuters is evaluating Grok 4.6 inside its own agent workflow. A first run should preserve routing control.",
       },
       {
-        number: "02",
-        title: "Answer governance first",
+        label: "02",
+        title: "Close governance questions",
         body:
-          "Cloud Agents can expand after the remaining security and governance questions are closed.",
+          "Security and governance questions need clear answers before the work expands beyond a narrow first job.",
       },
       {
-        number: "03",
-        title: "Prove delivery impact",
+        label: "03",
+        title: "Use delivery measures",
         body:
-          "The value case should use idea-to-deploy time, change failure rate, and recovery time. Token savings are not the decision.",
-      },
-    ],
-  },
-  useCases: {
-    eyebrow: "Jobs for the account team",
-    title: "Start with work sellers already do every week.",
-    intro:
-      "Each job ends in a useful deliverable. Grok Bot drafts the work and keeps the account team at the approval point.",
-    items: [
-      {
-        number: "01",
-        stage: "Before the meeting",
-        title: "Build the account brief",
-        body:
-          "Pull the latest relationship history, public news, open questions, and approved product material into one short brief.",
-        output: "Meeting brief",
-        sources: ["CRM", "Call notes", "Public signals"],
-      },
-      {
-        number: "02",
-        stage: "During discovery",
-        title: "Write the next deck",
-        body:
-          "Turn what the buyer said into tailored pages for CoCounsel, Westlaw, ONESOURCE, or the right Thomson Reuters offer.",
-        output: "Customer deck",
-        sources: ["Call notes", "Approved content"],
-      },
-      {
-        number: "03",
-        stage: "After the call",
-        title: "Prepare the follow-up",
-        body:
-          "Draft the recap, capture open questions, assign next steps, and update the account record for rep review.",
-        output: "Follow-up pack",
-        sources: ["Inbox", "CRM", "Call notes"],
-      },
-      {
-        number: "04",
-        stage: "In the deal",
-        title: "Answer procurement",
-        body:
-          "Find approved product, security, and contract answers. Cite every source and leave the final response with the account team.",
-        output: "Sourced response",
-        sources: ["Security docs", "Contracts", "Product docs"],
-      },
-      {
-        number: "05",
-        stage: "Across the account",
-        title: "Find the next team",
-        body:
-          "Map useful connections across Legal Professionals, Corporates, Tax & Accounting, and Reuters News.",
-        output: "Account map",
-        sources: ["CRM", "Org research", "Engagement history"],
-      },
-      {
-        number: "06",
-        stage: "For the week",
-        title: "Prepare the sales review",
-        body:
-          "Collect deal changes, stalled decisions, and account-team commitments into a short review for leaders.",
-        output: "Operating brief",
-        sources: ["CRM", "Inbox", "Team notes"],
-      },
-    ],
-  },
-  operatingModel: {
-    eyebrow: "How it works",
-    title: "Signals in. Work out. Approval stays with the team.",
-    intro:
-      "The first workflow can stay narrow. Connect approved sources, define the job, and make every external action wait for review.",
-    steps: [
-      {
-        number: "01",
-        title: "Watch approved signals",
-        body: "A call ends, an email arrives, a field changes, or a scheduled job starts.",
-      },
-      {
-        number: "02",
-        title: "Do the background work",
-        body: "Grok Bot gathers context, checks approved sources, and builds the deliverable.",
-      },
-      {
-        number: "03",
-        title: "Hand back a decision",
-        body: "The rep reviews the draft, edits it, and decides what happens next.",
+          "The account plan names idea-to-deploy time, change failure rate, and recovery time as useful measures. Token savings are not the decision.",
       },
     ],
   },
   comparison: {
-    eyebrow: "A different working model",
-    title: "Move from answers to finished sales work.",
+    title: "This is a working team, not another chat tab.",
     intro:
-      "A chat window helps when someone knows what to ask. Grok Bot also handles the repeatable work around the question.",
+      "Each agent has its own computer, starts from an approved signal, and returns finished work for review.",
     rows: [
       {
-        label: "Starts when",
-        chat: "A person writes a prompt",
-        grokBot: "An approved signal or schedule starts a job",
+        label: "What starts the work",
+        grokBot: "An approved signal, event, or schedule",
+        chat: "A person opens a chat and writes a prompt",
       },
       {
-        label: "Uses",
-        chat: "The context in one conversation",
-        grokBot: "Approved account, call, inbox, and product sources",
+        label: "Where the work happens",
+        grokBot: "Across approved tools on the agent's computer",
+        chat: "Inside one conversation",
       },
       {
-        label: "Produces",
-        chat: "An answer to copy into another tool",
-        grokBot: "A review-ready brief, deck, reply, or account update",
-      },
-      {
-        label: "Acts",
-        chat: "Inside the chat",
-        grokBot: "Across the workflow, with approval before external action",
+        label: "What comes back",
+        grokBot: "A finished brief, pack, or sourced reply",
+        chat: "An answer that still needs to be moved into the workflow",
       },
     ],
   },
   rollout: {
-    eyebrow: "30-day plan",
+    eyebrow: "Proposed first run",
     title: "Prove one job before adding the next.",
     intro:
-      "Keep the first month practical. Choose one account-team task, set the guardrails, and judge the work in the real workflow.",
+      "Choose a repeatable account-team task. Name the sources, review point, and finished artifact before the agent starts.",
     steps: [
       {
-        time: "Days 1 to 5",
+        label: "01",
         title: "Choose the job",
         body:
-          "Pick one repeatable task, name the approved sources, and agree on the final reviewer.",
+          "Pick one task with a clear trigger and a useful finished artifact.",
       },
       {
-        time: "Days 6 to 15",
-        title: "Run in shadow mode",
+        label: "02",
+        title: "Run in review mode",
         body:
-          "Let Grok Bot prepare the work without sending anything. Compare each draft with the account team's version.",
+          "Let the agent prepare the work. Keep every external action with the account team.",
       },
       {
-        time: "Days 16 to 30",
-        title: "Put the job to work",
+        label: "03",
+        title: "Judge the work",
         body:
-          "Move the approved workflow into regular use, review the result, and decide whether a second job earns its place.",
+          "Review the artifact in the real workflow. Add a second job only if the first one earns it.",
       },
     ],
-  },
-  close: {
-    eyebrow: "A focused first step",
-    title: "Pick the first job with the Thomson Reuters account team.",
-    body:
-      "Start with one workflow that sellers already repeat. We will map the sources, approval point, and output together.",
-    action: "Plan the working session",
   },
   owner: {
     name: "Nick Scallion",

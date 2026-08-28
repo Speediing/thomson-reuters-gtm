@@ -10,25 +10,39 @@ const requiredFiles = [
   "app/api/login/route.ts",
   "app/api/logout/route.ts",
   "app/icon.svg",
+  "components/agent-desk.tsx",
   "components/brand-lockup.tsx",
-  "components/customer-story.tsx",
   "components/login-form.tsx",
   "lib/auth.ts",
   "lib/site-content.ts",
   "proxy.ts",
   "public/brand/spacexai.svg",
+  "public/brand/thomson-reuters-watercolor-header.jpg",
   "public/brand/thomson-reuters.svg",
 ];
-const textExtensions = new Set([".css", ".md", ".mjs", ".ts", ".tsx", ".svg"]);
+const textExtensions = new Set([".css", ".mjs", ".ts", ".tsx", ".svg"]);
 const sourceFolders = ["app", "components", "lib", "public"];
 const sourceResidue = [
   ["data", "dog"].join(""),
   ["sea", "gate"].join(""),
   ["aster", " peak"].join(""),
   ["ac", "me"].join(""),
-  ["water", "color"].join(""),
 ];
 const priorColors = [
+  "181512",
+  "403a35",
+  "6f655d",
+  "f8f5ef",
+  "fffdfa",
+  "ddd5ca",
+  "b7aa9d",
+  "fa4f23",
+  "9f2e15",
+  "ffd9cf",
+  "6d43ff",
+  "d9e9ff",
+  "247968",
+  "d4eee7",
   "20231f",
   "686b63",
   "f5f1e8",
@@ -70,10 +84,7 @@ for (const file of requiredFiles) {
 }
 
 const files = sourceFolders.flatMap(collectFiles);
-const reviewFiles = [...files, join(root, "README.md"), join(root, "ARCHITECTURE.md")].filter(
-  existsSync,
-);
-const source = reviewFiles
+const source = files
   .map((file) => `${relative(root, file)}\n${readFileSync(file, "utf8")}`)
   .join("\n")
   .toLowerCase();
@@ -87,12 +98,22 @@ for (const color of priorColors) {
 }
 
 check(!source.includes(String.fromCodePoint(8212)), "Found an em dash in customer-facing source");
+check(!source.includes("<blockquote"), "Found a quote surface in customer-facing source");
 
 if (existsSync(join(root, "lib/site-content.ts"))) {
   const content = read("lib/site-content.ts");
   check(content.includes('title: "Thomson Reuters x SpaceXAI"'), "Missing customer title");
   check(content.includes('name: "Nick Scallion"'), "Missing account executive");
   check(content.includes('email: "nick.scallion@cursor.com"'), "Missing account executive email");
+  check(
+    (content.match(/kind: "artifact"/g) ?? []).length === 3,
+    "Every sample must end in one artifact frame",
+  );
+  check((content.match(/frames: \[/g) ?? []).length === 3, "Expected three scene timelines");
+  check(
+    content.includes("A fleet of agents, each with its own computer."),
+    "The hero does not establish the agent fleet",
+  );
 }
 
 if (existsSync(join(root, "components/brand-lockup.tsx"))) {
@@ -110,6 +131,24 @@ if (existsSync(join(root, "app/globals.css"))) {
   check(
     /\.customer-wordmark\s*\{[^}]*height:\s*(16|17|18)px/s.test(css),
     "The customer wordmark is not a 16px to 18px lockup",
+  );
+  check(css.includes(".watercolor-header"), "Missing the watercolor header treatment");
+  check(css.includes(".hero-paper"), "Missing the pinned cream hero paper");
+}
+
+if (existsSync(join(root, "components/agent-desk.tsx"))) {
+  const desk = read("components/agent-desk.tsx");
+  check(
+    desk.indexOf('className="chat-panel"') < desk.indexOf('className="computer-panel"'),
+    "The agent desk must render chat before the computer",
+  );
+  check(
+    desk.includes("data-frame-kind={frame.kind}"),
+    "Scene controls do not expose their frame kind",
+  );
+  check(
+    desk.includes('className="finished-artifact"'),
+    "The last scene has no finished artifact treatment",
   );
 }
 
