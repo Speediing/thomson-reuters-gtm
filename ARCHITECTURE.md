@@ -23,7 +23,7 @@ The chosen shape keeps the page on the server and sends only the workflow switch
 ## Tradeoffs accepted
 
 - The account team edits one long content file in exchange for a single source of truth.
-- The official customer wordmark stays remote in exchange for using the current asset from Thomson Reuters.
+- The repository stores the official customer wordmark in exchange for a stable lockup without a runtime request.
 - The password gate controls access but does not replace identity-based authentication.
 
 ## Alternatives considered
@@ -32,4 +32,4 @@ A fully client-rendered page lost because it sends static content and layout cod
 
 ## Open risk
 
-The official wordmark depends on the Thomson Reuters asset host. The page keeps explicit dimensions so the lockup does not shift while the SVG loads.
+The wordmark is a stored copy of a customer-hosted asset. Future brand changes require replacing that file from the source URL named in `components/brand-lockup.tsx`.

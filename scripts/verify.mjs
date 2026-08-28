@@ -16,6 +16,7 @@ const requiredFiles = [
   "lib/site-content.ts",
   "proxy.ts",
   "public/brand/spacexai.svg",
+  "public/brand/thomson-reuters.svg",
 ];
 const textExtensions = new Set([".css", ".md", ".mjs", ".ts", ".tsx", ".svg"]);
 const sourceFolders = ["app", "components", "lib", "public"];

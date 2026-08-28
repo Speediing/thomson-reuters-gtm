@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 
-const THOMSON_REUTERS_WORDMARK =
+const THOMSON_REUTERS_SOURCE =
   "https://www.thomsonreuters.com/etc.clientlibs/uefalcon/clientlibs/clientlib-bayberry/resources/images/tr-rebranded-logo.svg";
 
 type BrandLockupProps = {
@@ -13,11 +13,11 @@ export function BrandLockup({ linked = true }: BrandLockupProps) {
     <span className="brand-lockup" aria-label="Thomson Reuters and SpaceXAI">
       <Image
         className="customer-wordmark"
-        src={THOMSON_REUTERS_WORDMARK}
+        src="/brand/thomson-reuters.svg"
         alt="Thomson Reuters"
-        width={193}
-        height={27}
-        unoptimized
+        width={1926}
+        height={468}
+        data-source={THOMSON_REUTERS_SOURCE}
         priority
       />
       <span className="brand-times" aria-hidden="true">
