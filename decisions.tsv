@@ -12,3 +12,4 @@ ts	phase	decision	why	evidence	result
 2026-08-28T23:06:00Z	brand	stored the current official wordmark and kept its source URL in the lockup	the customer host closed connections from the verification browser	public/brand/thomson-reuters.svg, components/brand-lockup.tsx	removed the runtime network dependency
 2026-08-28T23:12:00Z	browser	added the site icon after Chrome exposed a missing favicon	the final browser run should have no failed resource	app/icon.svg	ready for another browser check
 2026-08-28T23:15:00Z	browser	changed logout to a relative redirect	the production server exposed its bind address in an absolute local redirect	app/api/logout/route.ts	logout now preserves the visitor host
+2026-08-28T23:18:00Z	security	made invalid return paths fall back to the home page	the login request is an untrusted network boundary	lib/auth.ts	malformed paths cannot fail the login route

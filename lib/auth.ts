@@ -45,8 +45,14 @@ export function safeNextPath(input: string | undefined) {
     return "/";
   }
 
-  const url = new URL(input, "https://local.invalid");
-  return url.origin === "https://local.invalid" ? `${url.pathname}${url.search}${url.hash}` : "/";
+  try {
+    const url = new URL(input, "https://local.invalid");
+    return url.origin === "https://local.invalid"
+      ? `${url.pathname}${url.search}${url.hash}`
+      : "/";
+  } catch {
+    return "/";
+  }
 }
 
 export type LoginPayload = {
