@@ -31,6 +31,7 @@ export default function HomePage() {
           height={720}
           sizes="100vw"
           priority
+          unoptimized
         />
         <div className="watercolor-caption">
           <span />
