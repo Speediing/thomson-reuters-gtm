@@ -1,5 +1,11 @@
 ts	phase	decision	why	evidence	result
 2026-08-28T22:20:00Z	frame	defined six checks for build, access, branding, ownership, residue, and browser behavior	customer-facing work needs observable completion checks	scripts/verify.mjs	predicate defined
-2026-08-28T22:21:00Z	grounding	used authenticated live deployments as the architecture source	the named reference repositories were not visible to this run	https://datadog-grokbot.vercel.app, https://seagate-grokbot.vercel.app	live pages and bundles captured
+2026-08-28T22:21:00Z	grounding	used the two authenticated live deployments as the architecture source	the named reference repositories were not visible to this run	source capture, not committed	live pages and bundles captured
 2026-08-28T22:22:00Z	grounding	used the scoped account plan for current Thomson Reuters context	customer copy must use sourced facts and avoid invented claims	internalsphere/account-plan-nick-scallion	context read
 2026-08-28T22:23:00Z	harness	added a rerunnable product and residue check	the empty baseline needs the same checks as the finished site	scripts/verify.mjs	ready for red baseline
+2026-08-28T22:25:00Z	harness	ran the check against the empty repository	a red baseline proves the checks can catch the missing product	commit a221518	eight required product files missing
+2026-08-28T22:30:00Z	delivery	confirmed the Vercel CLI has no authenticated user	deployment requires the requested jasonwiker access	Vercel CLI 59.9.1	production deployment blocked
+2026-08-28T22:42:00Z	architecture	chose one typed content registry and one interactive client component	static customer content should stay on the server	ARCHITECTURE.md	implementation stayed within one page model
+2026-08-28T22:45:00Z	security	put the signed-cookie check in both the protected layout and the request proxy	the request proxy should not be the only access boundary	lib/auth.ts, proxy.ts, app/(protected)/layout.tsx	password boundary implemented
+2026-08-28T22:52:00Z	experience	built the customer page around sourced account context and example workflows	the buyer needs a complete leave-behind without invented proof	app/(protected)/page.tsx, lib/site-content.ts	customer experience implemented
+2026-08-28T22:55:00Z	brand	used the current remote wordmark from the customer asset host	the official asset is more reliable than a redrawn mark	components/brand-lockup.tsx	17px lockup implemented

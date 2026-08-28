@@ -3,13 +3,18 @@ import { extname, join, relative } from "node:path";
 
 const root = new URL("../", import.meta.url).pathname;
 const requiredFiles = [
+  ".env.example",
   "app/(protected)/page.tsx",
+  "app/(protected)/layout.tsx",
   "app/(public)/login/page.tsx",
   "app/api/login/route.ts",
+  "app/api/logout/route.ts",
+  "components/brand-lockup.tsx",
   "components/customer-story.tsx",
+  "components/login-form.tsx",
   "lib/auth.ts",
   "lib/site-content.ts",
-  "middleware.ts",
+  "proxy.ts",
   "public/brand/spacexai.svg",
 ];
 const textExtensions = new Set([".css", ".md", ".mjs", ".ts", ".tsx", ".svg"]);
@@ -63,7 +68,10 @@ for (const file of requiredFiles) {
 }
 
 const files = sourceFolders.flatMap(collectFiles);
-const source = files
+const reviewFiles = [...files, join(root, "README.md"), join(root, "ARCHITECTURE.md")].filter(
+  existsSync,
+);
+const source = reviewFiles
   .map((file) => `${relative(root, file)}\n${readFileSync(file, "utf8")}`)
   .join("\n")
   .toLowerCase();
