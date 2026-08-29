@@ -2131,6 +2131,10 @@ button:active:not(:focus-visible),
   gap: 0.85rem;
 }
 
+.deck-slides.size-lg > .deck-tile:last-child:nth-child(odd) {
+  grid-column: 1 / -1;
+}
+
 .deck-slides.size-lg .deck-tile {
   min-height: 16.5rem;
   padding: 0;
