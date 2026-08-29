@@ -14,10 +14,14 @@ const requiredFiles = [
   "src/components/BrandLockup.tsx",
   "src/components/ChapterPayoff.tsx",
   "src/components/GrokBotWindow.tsx",
+  "src/components/HeroDemo.tsx",
   "src/components/JobSection.tsx",
+  "src/components/QuoteWall.tsx",
   "src/components/RosterChart.tsx",
   "src/data/fleet.ts",
+  "src/data/hero-jobs.ts",
   "src/data/jobs.ts",
+  "src/data/quotes.ts",
   "src/data/screens.ts",
   "src/lib/auth.ts",
   "src/lib/gate.ts",
@@ -105,7 +109,6 @@ for (const color of priorColors) {
 }
 
 check(!source.includes(String.fromCodePoint(8212)), "Found an em dash in customer source");
-check(!source.includes("<blockquote"), "Found an invented quote surface");
 check(!existsSync(join(root, "app")), "Found obsolete root app directory");
 check(!existsSync(join(root, "components")), "Found obsolete root components directory");
 check(!existsSync(join(root, "lib")), "Found obsolete root lib directory");
@@ -118,11 +121,33 @@ check(
 );
 
 const page = read("src/app/(protected)/page.tsx");
-check(page.includes("A fleet of agents, each with its own computer."), "Missing fleet hero");
+check(page.includes("<HeroDemo />"), "HomePage does not render HeroDemo");
 check(page.includes("thomson-reuters-watercolor-header.jpg"), "Missing watercolor header");
 check(page.includes("<RosterChart />"), "Missing fleet computers");
+check(page.includes("<QuoteWall />"), "Missing sourced quote wall");
 check(page.includes("Nick Scallion"), "Missing account executive");
 check(page.includes("nick.scallion@cursor.com"), "Missing account executive email");
+
+const hero = read("src/components/HeroDemo.tsx");
+check(hero.includes("A fleet of agents, each with its own computer."), "Missing fleet hero");
+for (const className of [
+  "hero-copy",
+  "hero-phone-jobs",
+  "hero-bot-demo",
+  "hero-phone",
+  "notch hero-phone-notch",
+  "header hero-phone-header",
+  "thread hero-phone-thread",
+  "composer hero-phone-composer",
+]) {
+  check(hero.includes(className), `Missing HeroDemo structure: ${className}`);
+}
+
+const heroJobs = read("src/data/hero-jobs.ts");
+check(
+  (heroJobs.match(/\n    id: "/g) ?? []).length === 8,
+  "HERO_JOBS must contain exactly eight entries",
+);
 
 const layout = read("src/app/layout.tsx");
 check(layout.includes("Thomson Reuters x SpaceXAI"), "Missing customer title");
@@ -147,6 +172,17 @@ check(css.includes("--brand-h: 17px"), "Customer lockup is not 15px to 18px");
 check(css.includes(".report-paper"), "Missing cream hero paper");
 check(css.includes(".paper-pin"), "Missing paper pins");
 check(css.includes(".agent-computer"), "Missing computer fleet styling");
+for (const selector of [".hero-phone", ".hero-bot-demo", ".hero-phone-jobs"]) {
+  check(css.includes(selector), `Missing hero phone CSS: ${selector}`);
+}
+
+const quoteWall = read("src/components/QuoteWall.tsx");
+const quotes = read("src/data/quotes.ts");
+check(quoteWall.includes('cite={quote.source}'), "Quote wall does not cite its sources");
+check(
+  (quotes.match(/source: "https:\/\/x\.com\//g) ?? []).length === 3,
+  "Quote wall sources are incomplete",
+);
 
 const desk = read("src/components/GrokBotWindow.tsx");
 check(

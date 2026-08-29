@@ -2,8 +2,10 @@ import Image from "next/image";
 
 import { BrandLockup } from "@/components/BrandLockup";
 import { CompareTable } from "@/components/CompareTable";
+import { HeroDemo } from "@/components/HeroDemo";
 import { HeroTelemetry } from "@/components/HeroTelemetry";
 import { JobSection } from "@/components/JobSection";
+import { QuoteWall } from "@/components/QuoteWall";
 import { RosterChart } from "@/components/RosterChart";
 import { SiteNav } from "@/components/SiteNav";
 import { JOBS } from "@/data/jobs";
@@ -30,17 +32,7 @@ export default function HomePage() {
           <span className="paper-pin paper-pin-left" aria-hidden />
           <span className="paper-pin paper-pin-right" aria-hidden />
           <HeroTelemetry />
-          <section className="hero">
-            <div>
-              <p className="eyebrow">Grok Bot for Thomson Reuters GTM</p>
-              <h1>A fleet of agents, each with its own computer.</h1>
-              <p className="hero-intro">
-                They handle the work around every account. Research, meeting
-                prep, follow-up, and approved answers keep moving while sellers
-                stay with the customer.
-              </p>
-            </div>
-          </section>
+          <HeroDemo />
 
           <section className="usecase-framing">
             <p className="eyebrow">Three sample use cases</p>
@@ -80,6 +72,7 @@ export default function HomePage() {
 
       <div className="report">
         <CompareTable />
+        <QuoteWall />
       </div>
 
       <footer className="site-footer">
