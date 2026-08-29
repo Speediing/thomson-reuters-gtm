@@ -2131,7 +2131,12 @@ button:active:not(:focus-visible),
   gap: 0.85rem;
 }
 
-.deck-slides.size-lg > .deck-tile:last-child:nth-child(odd) {
+.leave-heard.size-lg .heard-slide {
+  aspect-ratio: auto;
+  background: var(--surface);
+}
+
+.leave-heard.size-lg .deck-slides > .deck-tile:last-child:nth-child(odd) {
   grid-column: 1 / -1;
 }
 
